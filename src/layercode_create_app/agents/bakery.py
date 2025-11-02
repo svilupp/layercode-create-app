@@ -9,6 +9,7 @@ from typing import Any
 from pydantic_ai import Agent as PydanticAgent
 from pydantic_ai import RunContext
 from pydantic_ai.messages import ModelMessage
+from pydantic_ai.models.openai import OpenAIChatModelSettings
 from textprompts import load_prompt
 
 from ..sdk.events import MessagePayload, SessionEndPayload, SessionStartPayload
@@ -40,10 +41,15 @@ class BakeryAgent(BaseLayercodeAgent):
         prompt = load_prompt(PROMPTS_DIR / "bakery.txt")
         system_prompt = str(prompt.prompt)
 
+        model_settings = None
+        # Configure model settings for OpenAI GPT-5-nano to be even faster
+        if model == "openai:gpt-5-nano":
+            model_settings = OpenAIChatModelSettings(openai_reasoning_effort="minimal")
         self._agent = PydanticAgent(
             model,
             system_prompt=system_prompt,
             deps_type=StreamHelper,
+            model_settings=model_settings,
         )
 
         @self._agent.tool
