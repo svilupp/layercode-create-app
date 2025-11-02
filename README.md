@@ -240,6 +240,14 @@ make docs-build  # Build static site to site/
 
 ---
 
+## Related Projects
+
+- **[layercode-gym](https://github.com/svilupp/layercode-gym)** - LayerCode gym for evaluating your Layercode-based agents
+- **[layercode-examples](https://github.com/svilupp/layercode-examples)** - Agent patterns and integration recipes
+
+
+---
+
 ## License
 
 MIT
