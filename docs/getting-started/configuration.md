@@ -26,8 +26,8 @@ DEFAULT_MODEL=openai:gpt-5-nano
 # Logfire token for observability
 LOGFIRE_TOKEN=lf_...
 
-# Agent-specific configuration
-AGENT_ID=agent_...
+# LayerCode agent ID (for --unsafe-update-webhook)
+LAYERCODE_AGENT_ID=agent_...
 ```
 
 ## CLI Configuration
@@ -53,6 +53,8 @@ Configure the `run` command:
 --agent-route PATH     # Webhook route (default: /api/agent)
 --authorize-route PATH # Auth route (default: /api/authorize)
 --tunnel               # Enable Cloudflare tunnel
+--agent-id ID          # Agent ID for webhook auto-update
+--unsafe-update-webhook # Auto-update webhook to tunnel URL
 ```
 
 ## Model Configuration
@@ -119,6 +121,18 @@ uv run layercode-create-app run --tunnel
 ```
 
 The tunnel URL will be printed to the console. Copy the full webhook URL to your LayerCode dashboard.
+
+### Auto-Update Webhook
+
+For quick testing, automatically update your LayerCode agent's webhook URL:
+
+```bash
+uv run layercode-create-app run --tunnel --unsafe-update-webhook
+```
+
+This requires `LAYERCODE_AGENT_ID` in your `.env` (or `--agent-id` flag). On shutdown, the previous webhook URL is automatically restored.
+
+> **WARNING:** Do NOT use `--unsafe-update-webhook` with production agents—it will disrupt live traffic.
 
 ### Tunnel Logs
 

@@ -39,6 +39,8 @@ def run(
     tunnel: bool,
     verbose: bool,
     env_file: str,
+    agent_id: str | None,
+    unsafe_update_webhook: bool,
 ) -> None:
     """Start the FastAPI server with optional Cloudflare tunnel."""
 
@@ -57,6 +59,9 @@ def run(
         "authorize_route": authorize_route,
     }
 
+    if agent_id:
+        overrides["layercode_agent_id"] = agent_id
+
     settings = base_settings.model_copy(update=overrides)
 
     if not settings.layercode_api_key:
@@ -66,6 +71,18 @@ def run(
     if not settings.layercode_webhook_secret:
         print("Error: Missing LAYERCODE_WEBHOOK_SECRET in environment or overrides.")
         sys.exit(1)
+
+    # Validate unsafe_update_webhook requirements
+    if unsafe_update_webhook:
+        if not tunnel:
+            print("Error: --unsafe-update-webhook requires --tunnel flag")
+            sys.exit(1)
+        if not settings.layercode_agent_id:
+            print(
+                "Error: --unsafe-update-webhook requires LAYERCODE_AGENT_ID "
+                "env var or --agent-id argument"
+            )
+            sys.exit(1)
 
     chosen_model = model if model else settings.default_model
 
@@ -98,6 +115,9 @@ def run(
             settings.port,
             settings.agent_route,
             settings.cloudflare_bin,
+            settings.layercode_agent_id,
+            settings.layercode_api_key,
+            unsafe_update_webhook,
         )
 
         async def run_server() -> None:
@@ -173,6 +193,19 @@ def main() -> None:
         help="Launch a Cloudflare tunnel alongside the server",
     )
     run_parser.add_argument(
+        "--agent-id",
+        default=None,
+        help="Agent ID for webhook updates (overrides LAYERCODE_AGENT_ID env var)",
+    )
+    run_parser.add_argument(
+        "--unsafe-update-webhook",
+        action="store_true",
+        help=(
+            "Automatically update agent webhook URL when using --tunnel "
+            "(requires --agent-id or LAYERCODE_AGENT_ID)"
+        ),
+    )
+    run_parser.add_argument(
         "--verbose",
         "-v",
         action="store_true",
@@ -199,6 +232,8 @@ def main() -> None:
             tunnel=args.tunnel,
             verbose=args.verbose,
             env_file=args.env_file,
+            agent_id=args.agent_id,
+            unsafe_update_webhook=args.unsafe_update_webhook,
         )
     else:
         parser.print_help()
