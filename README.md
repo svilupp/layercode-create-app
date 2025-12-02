@@ -29,11 +29,11 @@ uvx layercode-create-app run --tunnel
 ```
 
 This command will:
-1. Scaffold and start a FastAPI server with the default agent
+1. Start a FastAPI server with the default agent
 2. Launch a Cloudflare tunnel and display your public webhook URL
-3. Show you exactly where to paste the URL in your LayerCode dashboard
+3. Show you exactly where to paste the URL in your LayerCode dashboard (if you didn't use `--unsafe-update-webhook`)
 
-> **Tip:** Use `--unsafe-update-webhook` to skip manual webhook setup (see [Auto-Update Webhook](#auto-update-webhook-quick-testing)).
+> **Tip:** Add `--unsafe-update-webhook` to skip manual webhook setting in Layercode dashboard (see [Auto-Update Webhook](#auto-update-webhook-quick-testing)).
 
 ### Example Output
 
