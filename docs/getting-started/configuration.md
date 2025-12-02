@@ -132,6 +132,8 @@ uv run layercode-create-app run --tunnel --unsafe-update-webhook
 
 This requires `LAYERCODE_AGENT_ID` in your `.env` (or `--agent-id` flag). On shutdown, the previous webhook URL is automatically restored.
 
+> **WARNING:** Do NOT use `--unsafe-update-webhook` with production agents—it will disrupt live traffic.
+
 ### Tunnel Logs
 
 Enable verbose logging to see tunnel activity:

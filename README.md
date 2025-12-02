@@ -33,6 +33,8 @@ This command will:
 2. Launch a Cloudflare tunnel and display your public webhook URL
 3. Show you exactly where to paste the URL in your LayerCode dashboard
 
+> **Tip:** Use `--unsafe-update-webhook` to skip manual webhook setup (see [Auto-Update Webhook](#auto-update-webhook-quick-testing)).
+
 ### Example Output
 
 ```
@@ -182,7 +184,7 @@ This will:
 3. Update your agent's webhook to the new tunnel URL
 4. On shutdown, restore the previous webhook URL
 
-> **Note:** This is called "unsafe" because it modifies your agent's production configuration. Use with caution.
+> **WARNING: This flag modifies your LayerCode agent's webhook configuration via the API. Do NOT use this with production agents—it will disrupt live traffic. Only use with dedicated development/test agents.**
 
 ---
 
