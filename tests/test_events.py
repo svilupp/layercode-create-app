@@ -276,6 +276,24 @@ def test_session_end_transcript_with_extra_fields() -> None:
     assert item.text == "Hello"
 
 
+def test_session_end_transcript_integer_timestamps() -> None:
+    """TranscriptItem accepts integer timestamps (Unix ms) from LayerCode API."""
+    payload = SessionEndPayload.model_validate(
+        {
+            "type": "session.end",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+            "transcript": [
+                {"role": "assistant", "text": "Hello!", "timestamp": 1764715092729},
+                {"role": "user", "text": "Hi", "timestamp": 1764715102963},
+            ],
+        }
+    )
+    assert payload.transcript is not None
+    assert payload.transcript[0].timestamp == 1764715092729
+    assert payload.transcript[1].timestamp == 1764715102963
+
+
 # =============================================================================
 # Union Parsing Tests (parse_webhook_payload)
 # =============================================================================

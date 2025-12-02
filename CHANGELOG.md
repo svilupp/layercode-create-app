@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2025-12-02
+
+### Fixed
+
+- `TranscriptItem.timestamp` now accepts integer Unix timestamps (milliseconds) from LayerCode API
+- Fixed loguru logging to use f-string interpolation instead of invalid `%s` syntax
+
 ## [0.1.0] - 2025-12-02
 
 ### Added
