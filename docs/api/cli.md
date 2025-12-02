@@ -23,6 +23,8 @@ uv run layercode-create-app run [OPTIONS]
 | `--agent-route` | string | `/api/agent` | Webhook endpoint path |
 | `--authorize-route` | string | `/api/authorize` | Authorization endpoint path |
 | `--tunnel` | flag | `False` | Launch Cloudflare tunnel |
+| `--agent-id` | string | from env | Agent ID for webhook auto-update |
+| `--unsafe-update-webhook` | flag | `False` | Auto-update agent webhook to tunnel URL |
 | `--env-file` | path | `.env` | Environment file to load |
 | `--verbose`, `-v` | flag | `False` | Enable debug logging |
 
@@ -46,6 +48,11 @@ uv run layercode-create-app run --port 3000 --verbose
 Use a specific AI model:
 ```bash
 uv run layercode-create-app run --agent starter --model openai:gpt-4
+```
+
+Auto-update webhook URL for quick testing:
+```bash
+uv run layercode-create-app run --tunnel --unsafe-update-webhook --agent-id agent_xxx
 ```
 
 ### `list-agents`
@@ -91,6 +98,7 @@ OPENAI_API_KEY=sk-...  # or GOOGLE_GENERATIVEAI_API_KEY
 ```env
 DEFAULT_MODEL=openai:gpt-5-nano
 LOGFIRE_TOKEN=lf_...
+LAYERCODE_AGENT_ID=agent_...  # For --unsafe-update-webhook
 ```
 
 ## Exit Codes

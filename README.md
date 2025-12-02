@@ -120,6 +120,8 @@ uvx layercode-create-app run --agent bakery --tunnel
 | `--agent-route` | `/api/agent` | Webhook route path |
 | `--authorize-route` | `/api/authorize` | Authorization route path |
 | `--tunnel` | `False` | Launch a Cloudflare quick tunnel for public access |
+| `--agent-id` | env `LAYERCODE_AGENT_ID` | Agent ID for webhook auto-update |
+| `--unsafe-update-webhook` | `False` | Auto-update agent webhook URL to tunnel URL (requires `--tunnel`) |
 | `--env-file` | `.env` | Path to environment file to load before running |
 | `--verbose`, `-v` | `False` | Enable DEBUG logging for detailed request traces |
 
@@ -161,6 +163,26 @@ When you use the `--tunnel` flag:
 - **The server waits** for the tunnel to be ready before accepting requests
 
 This makes it trivial to develop and test voice agents without deploying to production infrastructure.
+
+### Auto-Update Webhook (Quick Testing)
+
+For rapid iteration, use `--unsafe-update-webhook` to automatically update your LayerCode agent's webhook URL to the tunnel URL:
+
+```bash
+# Set your agent ID in .env
+LAYERCODE_AGENT_ID=agent_...
+
+# Run with auto-update
+uvx layercode-create-app run --tunnel --unsafe-update-webhook
+```
+
+This will:
+1. Start the tunnel and get a public URL
+2. Fetch the current webhook URL from your agent (and save it)
+3. Update your agent's webhook to the new tunnel URL
+4. On shutdown, restore the previous webhook URL
+
+> **Note:** This is called "unsafe" because it modifies your agent's production configuration. Use with caution.
 
 ---
 

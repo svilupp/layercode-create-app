@@ -17,6 +17,7 @@ class AppSettings(BaseSettings):
 
     layercode_api_key: str | None = None
     layercode_webhook_secret: str | None = None
+    layercode_agent_id: str | None = None
 
     logfire_token: str | None = None
 
