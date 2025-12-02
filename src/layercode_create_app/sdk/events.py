@@ -67,7 +67,7 @@ class TranscriptItem(BaseModel):
 
     role: str
     text: str
-    timestamp: str | None = None
+    timestamp: int | str | None = None  # Unix ms (int) or ISO string
 
     model_config = ConfigDict(extra="allow")
 

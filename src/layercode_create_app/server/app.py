@@ -45,7 +45,7 @@ def create_app(settings: AppSettings, agent: BaseLayercodeAgent) -> FastAPI:
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         client = httpx.AsyncClient(timeout=httpx.Timeout(15.0, connect=5.0))
         app.state.http_client = client
-        logger.info("FastAPI application starting on %s:%s", settings.host, settings.port)
+        logger.info(f"FastAPI application starting on {settings.host}:{settings.port}")
         yield
         await client.aclose()
         logger.info("FastAPI application shutdown")
@@ -94,13 +94,13 @@ def create_app(settings: AppSettings, agent: BaseLayercodeAgent) -> FastAPI:
             )
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
-            logger.error("LayerCode API error %s", exc.response.status_code)
+            logger.error(f"LayerCode API error {exc.response.status_code}")
             raise HTTPException(
                 status_code=exc.response.status_code,
                 detail=exc.response.text or exc.response.reason_phrase,
             ) from exc
         except httpx.RequestError as exc:
-            logger.error("Failed to reach LayerCode API: %s", exc)
+            logger.error(f"Failed to reach LayerCode API: {exc}")
             raise HTTPException(status.HTTP_502_BAD_GATEWAY, "LayerCode API unreachable") from exc
 
         logger.info("Session authorized for agent")
@@ -125,7 +125,7 @@ def create_app(settings: AppSettings, agent: BaseLayercodeAgent) -> FastAPI:
         try:
             verify_signature(body_str, signature, secret)
         except InvalidSignatureError as exc:
-            logger.warning("Invalid signature: %s", exc)
+            logger.warning(f"Invalid signature: {exc}")
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, str(exc)) from exc
 
         try:
@@ -136,14 +136,10 @@ def create_app(settings: AppSettings, agent: BaseLayercodeAgent) -> FastAPI:
         try:
             payload = parse_webhook_payload(payload_dict)
         except Exception as exc:
-            logger.error("Payload validation failed: %s", exc)
+            logger.error(f"Payload validation failed: {exc}")
             raise HTTPException(status.HTTP_400_BAD_REQUEST, "Invalid payload schema") from exc
 
-        logger.info(
-            "Webhook received: type=%s conversation=%s",
-            payload.type,
-            payload.conversation_id,
-        )
+        logger.info(f"Webhook received: type={payload.type} conversation={payload.conversation_id}")
 
         await conversation_store.acquire_lock(payload.conversation_id)
         try:
@@ -208,11 +204,8 @@ async def _handle_data(
     payload: DataPayload,
     agent: BaseLayercodeAgent,
 ) -> Response:
-    logger.info(
-        "Data event received: session=%s keys=%s",
-        payload.session_id,
-        list(payload.data.keys()) if payload.data else [],
-    )
+    data_keys = list(payload.data.keys()) if payload.data else []
+    logger.info(f"Data event received: session={payload.session_id} keys={data_keys}")
     response_data = await agent.handle_data(payload)
     return JSONResponse(response_data or {"status": "ok"})
 
@@ -222,10 +215,8 @@ async def _handle_session_update(
     agent: BaseLayercodeAgent,
 ) -> Response:
     logger.info(
-        "Session update: session=%s recording_status=%s duration=%s",
-        payload.session_id,
-        payload.recording_status,
-        payload.recording_duration,
+        f"Session update: session={payload.session_id} "
+        f"recording_status={payload.recording_status} duration={payload.recording_duration}"
     )
     await agent.handle_session_update(payload)
     return JSONResponse({"status": "ok"})
@@ -237,10 +228,8 @@ async def _handle_session_end(
 ) -> Response:
     transcript_count = len(payload.transcript) if payload.transcript else 0
     logger.info(
-        "Session ended: session=%s duration=%sms transcript_items=%d",
-        payload.session_id,
-        payload.duration,
-        transcript_count,
+        f"Session ended: session={payload.session_id} "
+        f"duration={payload.duration}ms transcript_items={transcript_count}"
     )
     await agent.handle_session_end(payload)
     return JSONResponse({"status": "ok"})

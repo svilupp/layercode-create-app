@@ -129,7 +129,7 @@ def run(
             try:
                 await launcher.start()
             except RuntimeError as exc:
-                logger.error("Tunnel error: %s", exc)
+                logger.error(f"Tunnel error: {exc}")
                 server.should_exit = True
                 raise
             await server_task
