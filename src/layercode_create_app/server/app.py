@@ -26,6 +26,7 @@ from ..sdk.events import (
     DataPayload,
     LayercodeEventType,
     MessagePayload,
+    SessionEndPayload,
     SessionStartPayload,
     SessionUpdatePayload,
 )
@@ -231,7 +232,7 @@ async def _handle_session_update(
 
 
 async def _handle_session_end(
-    payload: Any,
+    payload: SessionEndPayload,
     agent: BaseLayercodeAgent,
 ) -> Response:
     transcript_count = len(payload.transcript) if payload.transcript else 0

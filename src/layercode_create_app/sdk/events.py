@@ -100,11 +100,7 @@ class SessionUpdatePayload(BaseWebhookPayload):
 
 
 WebhookPayload = (
-    SessionStartPayload
-    | MessagePayload
-    | DataPayload
-    | SessionEndPayload
-    | SessionUpdatePayload
+    SessionStartPayload | MessagePayload | DataPayload | SessionEndPayload | SessionUpdatePayload
 )
 
 

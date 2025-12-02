@@ -33,12 +33,14 @@ def test_session_start_payload_parsing(session_start_payload: dict[str, str]) ->
 def test_session_start_requires_turn_id() -> None:
     """session.start events must include turn_id."""
     with pytest.raises(ValidationError) as exc_info:
-        SessionStartPayload.model_validate({
-            "type": "session.start",
-            "session_id": "sess_123",
-            "conversation_id": "conv_456",
-            # Missing turn_id
-        })
+        SessionStartPayload.model_validate(
+            {
+                "type": "session.start",
+                "session_id": "sess_123",
+                "conversation_id": "conv_456",
+                # Missing turn_id
+            }
+        )
     assert "turn_id" in str(exc_info.value)
 
 
@@ -55,17 +57,19 @@ def test_message_payload_parsing(message_payload: dict[str, str]) -> None:
 
 
 def test_message_payload_with_optional_fields() -> None:
-    payload = MessagePayload.model_validate({
-        "type": "message",
-        "session_id": "sess_123",
-        "conversation_id": "conv_456",
-        "turn_id": "turn_790",
-        "text": "Hello",
-        "recording_url": "https://example.com/recording.wav",
-        "recording_status": "completed",
-        "transcript": "Hello there",
-        "usage": {"tokens": 100},
-    })
+    payload = MessagePayload.model_validate(
+        {
+            "type": "message",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+            "turn_id": "turn_790",
+            "text": "Hello",
+            "recording_url": "https://example.com/recording.wav",
+            "recording_status": "completed",
+            "transcript": "Hello there",
+            "usage": {"tokens": 100},
+        }
+    )
     assert payload.recording_url == "https://example.com/recording.wav"
     assert payload.recording_status == "completed"
     assert payload.transcript == "Hello there"
@@ -88,36 +92,42 @@ def test_data_payload_parsing(data_payload: dict[str, Any]) -> None:
 def test_data_payload_requires_turn_id() -> None:
     """data events must include turn_id."""
     with pytest.raises(ValidationError) as exc_info:
-        DataPayload.model_validate({
-            "type": "data",
-            "session_id": "sess_123",
-            "conversation_id": "conv_456",
-            "data": {"key": "value"},
-            # Missing turn_id
-        })
+        DataPayload.model_validate(
+            {
+                "type": "data",
+                "session_id": "sess_123",
+                "conversation_id": "conv_456",
+                "data": {"key": "value"},
+                # Missing turn_id
+            }
+        )
     assert "turn_id" in str(exc_info.value)
 
 
 def test_data_payload_empty_data() -> None:
     """data events can have empty data dict."""
-    payload = DataPayload.model_validate({
-        "type": "data",
-        "session_id": "sess_123",
-        "conversation_id": "conv_456",
-        "turn_id": "turn_791",
-        "data": {},
-    })
+    payload = DataPayload.model_validate(
+        {
+            "type": "data",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+            "turn_id": "turn_791",
+            "data": {},
+        }
+    )
     assert payload.data == {}
 
 
 def test_data_payload_defaults_to_empty_dict() -> None:
     """data field defaults to empty dict if not provided."""
-    payload = DataPayload.model_validate({
-        "type": "data",
-        "session_id": "sess_123",
-        "conversation_id": "conv_456",
-        "turn_id": "turn_791",
-    })
+    payload = DataPayload.model_validate(
+        {
+            "type": "data",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+            "turn_id": "turn_791",
+        }
+    )
     assert payload.data == {}
 
 
@@ -133,7 +143,10 @@ def test_session_update_payload_parsing(session_update_payload: dict[str, Any]) 
     assert payload.session_id == "fm4l7332owiu9ng5crslh75l"
     assert payload.conversation_id == "ho8n0aht86qrs6tpfocymyty"
     assert payload.recording_status == "completed"
-    assert payload.recording_url == "https://api.layercode.com/v1/agents/mxdi9mls/sessions/fm4l7332owiu9ng5crslh75l/recording"
+    assert (
+        payload.recording_url
+        == "https://api.layercode.com/v1/agents/mxdi9mls/sessions/fm4l7332owiu9ng5crslh75l/recording"
+    )
     assert payload.recording_duration == 27
 
 
@@ -148,12 +161,14 @@ def test_session_update_failed_payload(session_update_failed_payload: dict[str, 
 
 def test_session_update_no_turn_id_required() -> None:
     """session.update does NOT require turn_id (key fix for the 400 error)."""
-    payload = SessionUpdatePayload.model_validate({
-        "type": "session.update",
-        "session_id": "sess_123",
-        "conversation_id": "conv_456",
-        "recording_status": "completed",
-    })
+    payload = SessionUpdatePayload.model_validate(
+        {
+            "type": "session.update",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+            "recording_status": "completed",
+        }
+    )
     assert payload.session_id == "sess_123"
     # Verify turn_id is not an attribute on this payload type
     assert not hasattr(payload, "turn_id")
@@ -161,11 +176,13 @@ def test_session_update_no_turn_id_required() -> None:
 
 def test_session_update_minimal_payload() -> None:
     """session.update with only required fields."""
-    payload = SessionUpdatePayload.model_validate({
-        "type": "session.update",
-        "session_id": "sess_123",
-        "conversation_id": "conv_456",
-    })
+    payload = SessionUpdatePayload.model_validate(
+        {
+            "type": "session.update",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+        }
+    )
     assert payload.recording_status is None
     assert payload.recording_url is None
     assert payload.recording_duration is None
@@ -214,11 +231,13 @@ def test_session_end_transcript_items(session_end_payload: dict[str, Any]) -> No
 
 def test_session_end_no_turn_id_required() -> None:
     """session.end does NOT require turn_id (key fix for the 400 error)."""
-    payload = SessionEndPayload.model_validate({
-        "type": "session.end",
-        "session_id": "sess_123",
-        "conversation_id": "conv_456",
-    })
+    payload = SessionEndPayload.model_validate(
+        {
+            "type": "session.end",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+        }
+    )
     assert payload.session_id == "sess_123"
     # Verify turn_id is not an attribute on this payload type
     assert not hasattr(payload, "turn_id")
@@ -235,20 +254,22 @@ def test_session_end_minimal_payload(session_end_minimal_payload: dict[str, Any]
 
 def test_session_end_transcript_with_extra_fields() -> None:
     """TranscriptItem allows extra fields for forward compatibility."""
-    payload = SessionEndPayload.model_validate({
-        "type": "session.end",
-        "session_id": "sess_123",
-        "conversation_id": "conv_456",
-        "transcript": [
-            {
-                "role": "user",
-                "text": "Hello",
-                "timestamp": "2025-12-02T16:50:05.000Z",
-                "confidence": 0.95,  # Extra field
-                "language": "en",    # Extra field
-            }
-        ],
-    })
+    payload = SessionEndPayload.model_validate(
+        {
+            "type": "session.end",
+            "session_id": "sess_123",
+            "conversation_id": "conv_456",
+            "transcript": [
+                {
+                    "role": "user",
+                    "text": "Hello",
+                    "timestamp": "2025-12-02T16:50:05.000Z",
+                    "confidence": 0.95,  # Extra field
+                    "language": "en",  # Extra field
+                }
+            ],
+        }
+    )
     assert payload.transcript is not None
     item = payload.transcript[0]
     assert item.role == "user"
@@ -288,11 +309,13 @@ def test_union_parsing_session_end(session_end_payload: dict[str, Any]) -> None:
 def test_union_parsing_unknown_type() -> None:
     """Unknown event types should raise ValidationError."""
     with pytest.raises(ValidationError):
-        parse_webhook_payload({
-            "type": "unknown.event",
-            "session_id": "sess_123",
-            "conversation_id": "conv_456",
-        })
+        parse_webhook_payload(
+            {
+                "type": "unknown.event",
+                "session_id": "sess_123",
+                "conversation_id": "conv_456",
+            }
+        )
 
 
 # =============================================================================
@@ -325,33 +348,39 @@ def test_phone_number_fields_on_all_payloads() -> None:
     }
 
     # session.start
-    payload = SessionStartPayload.model_validate({
-        "type": "session.start",
-        "session_id": "s1",
-        "conversation_id": "c1",
-        "turn_id": "t1",
-        **base_fields,
-    })
-    assert payload.from_phone_number == "+1234567890"
-    assert payload.to_phone_number == "+0987654321"
+    start_payload = SessionStartPayload.model_validate(
+        {
+            "type": "session.start",
+            "session_id": "s1",
+            "conversation_id": "c1",
+            "turn_id": "t1",
+            **base_fields,
+        }
+    )
+    assert start_payload.from_phone_number == "+1234567890"
+    assert start_payload.to_phone_number == "+0987654321"
 
     # session.update (no turn_id)
-    payload = SessionUpdatePayload.model_validate({
-        "type": "session.update",
-        "session_id": "s1",
-        "conversation_id": "c1",
-        **base_fields,
-    })
-    assert payload.from_phone_number == "+1234567890"
+    update_payload = SessionUpdatePayload.model_validate(
+        {
+            "type": "session.update",
+            "session_id": "s1",
+            "conversation_id": "c1",
+            **base_fields,
+        }
+    )
+    assert update_payload.from_phone_number == "+1234567890"
 
     # session.end (no turn_id)
-    payload = SessionEndPayload.model_validate({
-        "type": "session.end",
-        "session_id": "s1",
-        "conversation_id": "c1",
-        **base_fields,
-    })
-    assert payload.to_phone_number == "+0987654321"
+    end_payload = SessionEndPayload.model_validate(
+        {
+            "type": "session.end",
+            "session_id": "s1",
+            "conversation_id": "c1",
+            **base_fields,
+        }
+    )
+    assert end_payload.to_phone_number == "+0987654321"
 
 
 def test_metadata_field_on_all_payloads() -> None:
@@ -359,19 +388,23 @@ def test_metadata_field_on_all_payloads() -> None:
     metadata = {"user_id": "u123", "custom": True}
 
     # session.update
-    payload = SessionUpdatePayload.model_validate({
-        "type": "session.update",
-        "session_id": "s1",
-        "conversation_id": "c1",
-        "metadata": metadata,
-    })
-    assert payload.metadata == metadata
+    update_payload = SessionUpdatePayload.model_validate(
+        {
+            "type": "session.update",
+            "session_id": "s1",
+            "conversation_id": "c1",
+            "metadata": metadata,
+        }
+    )
+    assert update_payload.metadata == metadata
 
     # session.end
-    payload = SessionEndPayload.model_validate({
-        "type": "session.end",
-        "session_id": "s1",
-        "conversation_id": "c1",
-        "metadata": metadata,
-    })
-    assert payload.metadata == metadata
+    end_payload = SessionEndPayload.model_validate(
+        {
+            "type": "session.end",
+            "session_id": "s1",
+            "conversation_id": "c1",
+            "metadata": metadata,
+        }
+    )
+    assert end_payload.metadata == metadata
