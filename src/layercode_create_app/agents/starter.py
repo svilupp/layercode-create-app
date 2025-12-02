@@ -25,7 +25,7 @@ class StarterAgent(BaseLayercodeAgent):
 
     def __init__(self, model: str) -> None:
         super().__init__(model)
-        prompt = load_prompt(PROMPTS_DIR / "starter.txt")
+        prompt = load_prompt(PROMPTS_DIR / "starter.txt", meta="strict")
         system_prompt = str(prompt.prompt)
         self._welcome = "Hi there! How can I help today?"
         model_settings = None

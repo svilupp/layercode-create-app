@@ -14,6 +14,7 @@ from pydantic import ValidationError
 from .agents import available_agents, create_agent
 from .agents import bakery as _bakery  # noqa: F401
 from .agents import echo as _echo  # noqa: F401
+from .agents import outdoor_shop as _outdoor_shop  # noqa: F401
 from .agents import starter as _starter  # noqa: F401
 from .config import AppSettings
 from .logging import setup_logging
@@ -138,7 +139,7 @@ def main() -> None:
     run_parser.add_argument(
         "--agent",
         default="starter",
-        help="Agent to run: echo, starter, bakery (default: starter)",
+        help="Agent to run: echo, starter, bakery, outdoor_shop (default: starter)",
     )
     run_parser.add_argument(
         "--model",

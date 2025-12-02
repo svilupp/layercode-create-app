@@ -135,6 +135,22 @@ All prompts live under `src/layercode_create_app/agents/prompts/`. Edit them or 
 
 ---
 
+## Webhook Events
+
+The SDK handles all LayerCode webhook event types:
+
+| Event | Description | Agent Method |
+|-------|-------------|--------------|
+| `session.start` | New session begins | `handle_session_start()` |
+| `message` | User speech transcribed | `handle_message()` |
+| `data` | Client-sent structured JSON | `handle_data()` |
+| `session.update` | Recording completed/failed | `handle_session_update()` |
+| `session.end` | Session finished with transcript | `handle_session_end()` |
+
+Override these methods in your agent to handle each event type. See the [SDK documentation](https://svilupp.github.io/layercode-create-app/api/sdk/) for payload schemas.
+
+---
+
 ## Cloudflare Tunnel
 
 When you use the `--tunnel` flag:

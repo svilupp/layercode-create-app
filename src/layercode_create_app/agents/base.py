@@ -4,11 +4,17 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from pydantic_ai.messages import ModelMessage
 
-from ..sdk.events import MessagePayload, SessionEndPayload, SessionStartPayload
+from ..sdk.events import (
+    DataPayload,
+    MessagePayload,
+    SessionEndPayload,
+    SessionStartPayload,
+    SessionUpdatePayload,
+)
 from ..sdk.stream import StreamHelper
 
 
@@ -37,7 +43,27 @@ class BaseLayercodeAgent(ABC):
         """Handle `message` events and return messages to append to history."""
 
     async def handle_session_end(self, payload: SessionEndPayload) -> None:
-        """Handle `session.end` events."""
+        """Handle `session.end` events.
+
+        Override to perform cleanup, persist transcripts, or log analytics.
+        """
+
+        return None
+
+    async def handle_session_update(self, payload: SessionUpdatePayload) -> None:
+        """Handle `session.update` events (e.g., recording completed).
+
+        Override to process recording URLs, handle recording failures, etc.
+        """
+
+        return None
+
+    async def handle_data(self, payload: DataPayload) -> dict[str, Any] | None:
+        """Handle `data` events (client-sent structured JSON).
+
+        Override to process client-side data payloads. Return a dict to send
+        a JSON response, or None for a default {"status": "ok"} response.
+        """
 
         return None
 
