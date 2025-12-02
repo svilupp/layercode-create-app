@@ -6,8 +6,6 @@
 
 **Unofficial quick-starter template for [LayerCode.com](https://layercode.com) voice agent platform**
 
-> **Warning (v0.0.1-alpha):** This toolkit is an early alpha and may contain bugs or breaking changes. Please test thoroughly before using in production.
-
 `layercode-create-app` is a lightweight toolkit for spinning up LayerCode-compatible FastAPI backends with a single command. It packages:
 
 - **Typed LayerCode SDK primitives** for webhook payloads, signature verification, and SSE streaming

@@ -1,7 +1,7 @@
 # LayerCode Create App
 
 !!! warning "Early Alpha"
-    This toolkit is an early alpha (v0.0.1) and may contain bugs or breaking changes. Please test thoroughly before using in production.
+    This toolkit is an early release (v0.1.0) and may contain bugs or breaking changes. Please test thoroughly before using in production.
 
 **layercode-create-app** is a lightweight toolkit for spinning up LayerCode-compliant FastAPI backends with a single command.
 
