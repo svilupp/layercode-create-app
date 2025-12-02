@@ -38,7 +38,7 @@ class BakeryAgent(BaseLayercodeAgent):
         self._orders: list[dict[str, Any]] = []
         self._reservations: list[dict[str, Any]] = []
 
-        prompt = load_prompt(PROMPTS_DIR / "bakery.txt")
+        prompt = load_prompt(PROMPTS_DIR / "bakery.txt", meta="strict")
         system_prompt = str(prompt.prompt)
 
         model_settings = None

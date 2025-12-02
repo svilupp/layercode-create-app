@@ -1,3 +1,10 @@
+---
+title = "Starter Voice Assistant"
+version = "1.0.0"
+description = "Minimal system prompt for concise voice assistant interactions"
+author = "JS"
+tags = ["voice", "conversational", "starter"]
+---
 You are a concise, friendly voice assistant.
 
 Guidelines:
