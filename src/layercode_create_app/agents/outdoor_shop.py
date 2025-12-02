@@ -500,7 +500,7 @@ PRODUCT_CATALOG: dict[str, Product] = {
             regular_price=449.99,
             sale_price=379.99,
             discount_percentage=16,
-            sale_ends="2024-12-15T00:00:00Z",
+            sale_ends="2025-12-15T00:00:00Z",
         ),
         specifications=ProductSpecifications(
             weight=ProductWeight(packed="2 lbs 4 oz", minimum="1 lb 14 oz"),
@@ -585,7 +585,7 @@ PRODUCT_CATALOG: dict[str, Product] = {
             regular_price=289.99,
             sale_price=259.99,
             discount_percentage=10,
-            sale_ends="2024-12-20T00:00:00Z",
+            sale_ends="2025-12-20T00:00:00Z",
         ),
         specifications=ProductSpecifications(
             weight=ProductWeight(packed="1 lb 12 oz"),
@@ -643,7 +643,7 @@ PRODUCT_CATALOG: dict[str, Product] = {
             ),
         ),
         availability=ProductAvailability(
-            in_stock=False, quantity=0, warehouses=[], backorder_date="2024-12-10"
+            in_stock=False, quantity=0, warehouses=[], backorder_date="2025-12-10"
         ),
         certifications=["RDS Certified", "bluesign approved"],
         related_products=["SLEEP-LINER-SILK", "STUFF-SACK-COMP"],
@@ -658,7 +658,7 @@ PRODUCT_CATALOG: dict[str, Product] = {
             regular_price=249.99,
             sale_price=199.99,
             discount_percentage=20,
-            sale_ends="2024-12-08T00:00:00Z",
+            sale_ends="2025-12-08T00:00:00Z",
         ),
         specifications=ProductSpecifications(
             weight=ProductWeight(packed="10.5 oz"),
@@ -696,9 +696,9 @@ PRODUCT_CATALOG: dict[str, Product] = {
 }
 
 ORDERS_DB: dict[str, Order] = {
-    "NG-2024-78234": Order(
-        id="NG-2024-78234",
-        placed_at="2024-11-28T14:32:00Z",
+    "NG-2025-78234": Order(
+        id="NG-2025-78234",
+        placed_at="2025-11-28T14:32:00Z",
         status="in_transit",
         customer=OrderCustomer(first_name="Alex", email_masked="a***n@email.com"),
         totals=OrderTotals(subtotal=459.98, shipping=0.00, tax=36.80, discount=0.00, total=496.78),
@@ -726,29 +726,29 @@ ORDERS_DB: dict[str, Order] = {
             tracking_number="1Z999AA10123456784",
             tracking_url="https://ups.com/track?num=1Z999AA10123456784",
             address=ShippingAddress(city="Boulder", state="CO", zip="80301"),
-            estimated_delivery=DeliveryEstimate(earliest="2024-12-03", latest="2024-12-05"),
+            estimated_delivery=DeliveryEstimate(earliest="2025-12-03", latest="2025-12-05"),
         ),
         status_history=[
             OrderStatusEntry(
-                status="placed", timestamp="2024-11-28T14:32:00Z", note="Order confirmed"
+                status="placed", timestamp="2025-11-28T14:32:00Z", note="Order confirmed"
             ),
             OrderStatusEntry(
-                status="processing", timestamp="2024-11-28T16:45:00Z", note="Payment verified"
+                status="processing", timestamp="2025-11-28T16:45:00Z", note="Payment verified"
             ),
             OrderStatusEntry(
-                status="packed", timestamp="2024-11-29T09:12:00Z", note="Packed at Denver"
+                status="packed", timestamp="2025-11-29T09:12:00Z", note="Packed at Denver"
             ),
             OrderStatusEntry(
-                status="shipped", timestamp="2024-11-29T14:30:00Z", note="Handed to UPS"
+                status="shipped", timestamp="2025-11-29T14:30:00Z", note="Handed to UPS"
             ),
             OrderStatusEntry(
-                status="in_transit", timestamp="2024-11-30T08:00:00Z", note="In transit - Denver"
+                status="in_transit", timestamp="2025-11-30T08:00:00Z", note="In transit - Denver"
             ),
         ],
     ),
-    "NG-2024-81456": Order(
-        id="NG-2024-81456",
-        placed_at="2024-12-01T09:15:00Z",
+    "NG-2025-81456": Order(
+        id="NG-2025-81456",
+        placed_at="2025-12-01T09:15:00Z",
         status="processing",
         customer=OrderCustomer(first_name="Jordan", email_masked="j***n@email.com"),
         totals=OrderTotals(
@@ -770,14 +770,14 @@ ORDERS_DB: dict[str, Order] = {
             tracking_number=None,
             tracking_url=None,
             address=ShippingAddress(city="Portland", state="OR", zip="97201"),
-            estimated_delivery=DeliveryEstimate(earliest="2024-12-06", latest="2024-12-10"),
+            estimated_delivery=DeliveryEstimate(earliest="2025-12-06", latest="2025-12-10"),
         ),
         status_history=[
             OrderStatusEntry(
-                status="placed", timestamp="2024-12-01T09:15:00Z", note="Order confirmed"
+                status="placed", timestamp="2025-12-01T09:15:00Z", note="Order confirmed"
             ),
             OrderStatusEntry(
-                status="processing", timestamp="2024-12-01T10:30:00Z", note="Payment verified"
+                status="processing", timestamp="2025-12-01T10:30:00Z", note="Payment verified"
             ),
         ],
     ),
@@ -786,7 +786,7 @@ ORDERS_DB: dict[str, Order] = {
 POLICIES: dict[str, ReturnPolicy | ShippingPolicy | WarrantyPolicy] = {
     "returns": ReturnPolicy(
         name="Return & Exchange Policy",
-        last_updated="2024-09-01",
+        last_updated="2025-09-01",
         summary="60-day guarantee on unused gear; 1-year warranty on defects.",
         rules=ReturnRules(
             standard_returns=StandardReturnRules(
@@ -843,7 +843,7 @@ POLICIES: dict[str, ReturnPolicy | ShippingPolicy | WarrantyPolicy] = {
     ),
     "shipping": ShippingPolicy(
         name="Shipping Policy",
-        last_updated="2024-10-15",
+        last_updated="2025-10-15",
         summary="Free shipping over $99. Multiple speed options.",
         shipping_options=[
             ShippingOption(
@@ -876,7 +876,7 @@ POLICIES: dict[str, ReturnPolicy | ShippingPolicy | WarrantyPolicy] = {
         processing_time=ProcessingTime(
             standard="1-2 business days",
             peak_season="2-3 business days",
-            peak_season_dates=PeakSeasonDates(start="2024-11-15", end="2024-12-31"),
+            peak_season_dates=PeakSeasonDates(start="2025-11-15", end="2025-12-31"),
         ),
         tracking=TrackingInfo(
             provided=True,
@@ -886,7 +886,7 @@ POLICIES: dict[str, ReturnPolicy | ShippingPolicy | WarrantyPolicy] = {
     ),
     "warranty": WarrantyPolicy(
         name="Product Warranty",
-        last_updated="2024-06-01",
+        last_updated="2025-06-01",
         summary="Nimbus Gear products backed by quality promise.",
         warranty_tiers=[
             WarrantyTier(
@@ -965,6 +965,10 @@ class OutdoorShopAgent(BaseLayercodeAgent):
         ) -> ProductSearchResults:
             """Search the product catalog by keyword and optional category.
 
+            Note: This is a simplified demo. If no exact matches are found, returns
+            a sample of products from the catalog to ensure non-empty results for
+            testing purposes.
+
             Args:
                 query: Search terms (e.g., 'ultralight tent', 'rain jacket')
                 category: Optional filter: tents, backpacks, sleeping_bags, apparel
@@ -983,6 +987,7 @@ class OutdoorShopAgent(BaseLayercodeAgent):
                 if len(matches) >= max_results:
                     break
 
+            # Fallback: return sample products when no matches found (demo simplification)
             if not matches:
                 for product in PRODUCT_CATALOG.values():
                     if category and product.category != category.lower():
@@ -1019,7 +1024,7 @@ class OutdoorShopAgent(BaseLayercodeAgent):
             """Look up order status and tracking information.
 
             Args:
-                order_number: The order ID (e.g., 'NG-2024-78234')
+                order_number: The order ID (e.g., 'NG-2025-78234')
             """
             stream = ctx.deps
             order_upper = order_number.upper().strip()

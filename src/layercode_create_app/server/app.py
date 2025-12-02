@@ -23,9 +23,11 @@ from ..sdk import (
     verify_signature,
 )
 from ..sdk.events import (
+    DataPayload,
     LayercodeEventType,
     MessagePayload,
     SessionStartPayload,
+    SessionUpdatePayload,
 )
 from ..sdk.stream import StreamHelper
 from .conversation import ConversationStore
@@ -160,11 +162,12 @@ def create_app(settings: AppSettings, agent: BaseLayercodeAgent) -> FastAPI:
                 )
                 conversation_store.append(payload.conversation_id, new_messages)
                 return response
-            if payload.type == LayercodeEventType.SESSION_END:
-                await agent.handle_session_end(payload)
-                return JSONResponse({"status": "ok"})
+            if payload.type == LayercodeEventType.DATA:
+                return await _handle_data(payload, agent)
             if payload.type == LayercodeEventType.SESSION_UPDATE:
-                return JSONResponse({"status": "ok"})
+                return await _handle_session_update(payload, agent)
+            if payload.type == LayercodeEventType.SESSION_END:
+                return await _handle_session_end(payload, agent)
 
             raise HTTPException(status.HTTP_400_BAD_REQUEST, "Unsupported event type")
         finally:
@@ -198,3 +201,45 @@ async def _handle_message(
 
     response = await stream_response(payload_dict, handler)
     return response, new_messages
+
+
+async def _handle_data(
+    payload: DataPayload,
+    agent: BaseLayercodeAgent,
+) -> Response:
+    logger.info(
+        "Data event received: session=%s keys=%s",
+        payload.session_id,
+        list(payload.data.keys()) if payload.data else [],
+    )
+    response_data = await agent.handle_data(payload)
+    return JSONResponse(response_data or {"status": "ok"})
+
+
+async def _handle_session_update(
+    payload: SessionUpdatePayload,
+    agent: BaseLayercodeAgent,
+) -> Response:
+    logger.info(
+        "Session update: session=%s recording_status=%s duration=%s",
+        payload.session_id,
+        payload.recording_status,
+        payload.recording_duration,
+    )
+    await agent.handle_session_update(payload)
+    return JSONResponse({"status": "ok"})
+
+
+async def _handle_session_end(
+    payload: Any,
+    agent: BaseLayercodeAgent,
+) -> Response:
+    transcript_count = len(payload.transcript) if payload.transcript else 0
+    logger.info(
+        "Session ended: session=%s duration=%sms transcript_items=%d",
+        payload.session_id,
+        payload.duration,
+        transcript_count,
+    )
+    await agent.handle_session_end(payload)
+    return JSONResponse({"status": "ok"})

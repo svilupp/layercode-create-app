@@ -6,30 +6,140 @@ The LayerCode SDK provides primitives for webhook handling, signature verificati
 
 ### `layercode_create_app.sdk.events`
 
-Event types and models for LayerCode webhooks.
+Typed event models for LayerCode webhooks. All models are Pydantic-based with full type hints.
 
-#### `LayercodeEvent`
+#### Event Types
 
-Main event model representing incoming webhooks.
+The SDK supports all LayerCode webhook events:
+
+| Event | Payload Class | Has `turn_id` | Description |
+|-------|---------------|---------------|-------------|
+| `session.start` | `SessionStartPayload` | Yes | New session begins |
+| `message` | `MessagePayload` | Yes | User speech transcribed |
+| `data` | `DataPayload` | Yes | Client-sent structured JSON |
+| `session.update` | `SessionUpdatePayload` | No | Recording completed/failed |
+| `session.end` | `SessionEndPayload` | No | Session finished with transcript |
+
+#### `SessionStartPayload`
+
+Sent when a new voice session begins.
 
 ```python
-from layercode_create_app.sdk.events import LayercodeEvent
+from layercode_create_app.sdk import SessionStartPayload
 
-class LayercodeEvent:
-    type: str  # Event type (call_started, transcript, etc.)
-    call_id: str  # Unique call identifier
-    agent_id: str  # Agent identifier
-    timestamp: datetime  # Event timestamp
-    transcript: str | None  # User transcript (for transcript events)
-    metadata: dict  # Additional event metadata
+class SessionStartPayload:
+    type: Literal["session.start"]
+    session_id: str
+    conversation_id: str
+    turn_id: str
+    text: str | None = None
+    metadata: dict | None = None
+    from_phone_number: str | None = None
+    to_phone_number: str | None = None
 ```
 
-**Event Types:**
+#### `MessagePayload`
 
-- `call_started` - Call has begun
-- `transcript` - User speech transcribed
-- `call_ended` - Call has ended
-- `user_interrupted` - User interrupted the agent
+Sent when user speech is transcribed.
+
+```python
+from layercode_create_app.sdk import MessagePayload
+
+class MessagePayload:
+    type: Literal["message"]
+    session_id: str
+    conversation_id: str
+    turn_id: str
+    text: str | None = None
+    recording_url: str | None = None
+    recording_status: str | None = None
+    transcript: str | None = None
+    usage: dict | None = None
+    metadata: dict | None = None
+    from_phone_number: str | None = None
+    to_phone_number: str | None = None
+```
+
+#### `DataPayload`
+
+Sent when the client emits structured JSON (e.g., button clicks, form data).
+
+```python
+from layercode_create_app.sdk import DataPayload
+
+class DataPayload:
+    type: Literal["data"]
+    session_id: str
+    conversation_id: str
+    turn_id: str
+    data: dict  # Arbitrary JSON payload from client
+    metadata: dict | None = None
+    from_phone_number: str | None = None
+    to_phone_number: str | None = None
+```
+
+#### `SessionUpdatePayload`
+
+Sent when asynchronous session data becomes available (e.g., recording completion).
+
+```python
+from layercode_create_app.sdk import SessionUpdatePayload
+
+class SessionUpdatePayload:
+    type: Literal["session.update"]
+    session_id: str
+    conversation_id: str
+    recording_status: str | None = None  # "completed" | "failed"
+    recording_url: str | None = None     # URL to download WAV
+    recording_duration: float | None = None  # Duration in seconds
+    error_message: str | None = None     # Details when failed
+    metadata: dict | None = None
+    from_phone_number: str | None = None
+    to_phone_number: str | None = None
+```
+
+#### `SessionEndPayload`
+
+Sent when the session finishes, includes full transcript and metrics.
+
+```python
+from layercode_create_app.sdk import SessionEndPayload, TranscriptItem
+
+class TranscriptItem:
+    role: str           # "user" | "assistant"
+    text: str
+    timestamp: str | None = None
+
+class SessionEndPayload:
+    type: Literal["session.end"]
+    session_id: str
+    conversation_id: str
+    agent_id: str | None = None
+    started_at: str | None = None        # ISO timestamp
+    ended_at: str | None = None          # ISO timestamp
+    duration: int | None = None          # Milliseconds
+    transcription_duration_seconds: float | None = None
+    tts_duration_seconds: float | None = None
+    latency: float | None = None
+    ip_address: str | None = None
+    country_code: str | None = None
+    recording_status: str | None = None  # "enabled" | "disabled"
+    transcript: list[TranscriptItem] | None = None
+    metadata: dict | None = None
+    from_phone_number: str | None = None
+    to_phone_number: str | None = None
+```
+
+#### `parse_webhook_payload`
+
+Parse raw webhook JSON into the appropriate typed model.
+
+```python
+from layercode_create_app.sdk import parse_webhook_payload
+
+payload = parse_webhook_payload({"type": "session.start", ...})
+# Returns: SessionStartPayload | MessagePayload | DataPayload | SessionUpdatePayload | SessionEndPayload
+```
 
 ### `layercode_create_app.sdk.auth`
 
