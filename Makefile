@@ -10,7 +10,7 @@ lint:
 	uv run ruff check .
 
 typecheck:
-	uv run mypy src/layercode_create_app tests
+	uv run ty check src/layercode_create_app tests
 
 test:
 	uv run pytest

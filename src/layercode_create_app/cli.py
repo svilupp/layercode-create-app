@@ -15,6 +15,7 @@ from .agents import available_agents, create_agent
 from .agents import bakery as _bakery  # noqa: F401
 from .agents import echo as _echo  # noqa: F401
 from .agents import outdoor_shop as _outdoor_shop  # noqa: F401
+from .agents import slow_agent as _slow_agent  # noqa: F401
 from .agents import starter as _starter  # noqa: F401
 from .config import AppSettings
 from .logging import setup_logging
@@ -159,7 +160,11 @@ def main() -> None:
     run_parser.add_argument(
         "--agent",
         default="starter",
-        help="Agent to run: echo, starter, bakery, outdoor_shop (default: starter)",
+        help=(
+            "Agent to run (default: starter). Options: "
+            "echo (simple echo), starter (general assistant), bakery (tool demo), "
+            "outdoor_shop (e-commerce demo), slow_agent (test agent, ~10s response in 3 parts)"
+        ),
     )
     run_parser.add_argument(
         "--model",
