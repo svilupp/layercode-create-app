@@ -1,6 +1,6 @@
 [project]
 name = "layercode-create-app"
-version = "0.1.1"
+version = "0.2.0"
 description = "Fast scaffolding for LayerCode-ready FastAPI backends"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -24,7 +24,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "mypy>=1.11.2",
+    "ty>=0.0.8",
     "pytest>=8.3.2",
     "pytest-asyncio>=0.24.0",
     "ruff>=0.6.8",
@@ -33,14 +33,6 @@ dev = [
 
 [project.scripts]
 layercode-create-app = "layercode_create_app.cli:main"
-
-[tool.mypy]
-python_version = "3.12"
-strict = true
-warn_unreachable = true
-disallow_any_generics = true
-disallow_untyped_defs = true
-enable_error_code = ["ignore-without-code", "redundant-expr"]
 
 [tool.ruff]
 target-version = "py312"
@@ -65,7 +57,7 @@ package = true
 
 [dependency-groups]
 dev = [
-    "mypy>=1.18.2",
+    "ty>=0.0.8",
     "pytest>=8.4.2",
     "pytest-asyncio>=1.2.0",
     "pytest-cov>=6.0.0",

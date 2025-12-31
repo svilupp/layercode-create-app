@@ -95,9 +95,9 @@ jobs:
         run: |
           uv sync --group dev
 
-      - name: Run mypy
+      - name: Run ty
         run: |
-          uv run mypy src/layercode_create_app tests
+          uv run ty check src/layercode_create_app tests
 
   build:
     name: Build Package

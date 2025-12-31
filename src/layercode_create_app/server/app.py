@@ -146,25 +146,25 @@ def create_app(settings: AppSettings, agent: BaseLayercodeAgent) -> FastAPI:
             if payload.type == LayercodeEventType.SESSION_START:
                 return await _handle_session_start(
                     payload_dict,
-                    payload,
+                    cast(SessionStartPayload, payload),
                     agent,
                 )
             if payload.type == LayercodeEventType.MESSAGE:
                 history = conversation_store.get(payload.conversation_id)
                 response, new_messages = await _handle_message(
                     payload_dict,
-                    payload,
+                    cast(MessagePayload, payload),
                     history,
                     agent,
                 )
                 conversation_store.append(payload.conversation_id, new_messages)
                 return response
             if payload.type == LayercodeEventType.DATA:
-                return await _handle_data(payload, agent)
+                return await _handle_data(cast(DataPayload, payload), agent)
             if payload.type == LayercodeEventType.SESSION_UPDATE:
-                return await _handle_session_update(payload, agent)
+                return await _handle_session_update(cast(SessionUpdatePayload, payload), agent)
             if payload.type == LayercodeEventType.SESSION_END:
-                return await _handle_session_end(payload, agent)
+                return await _handle_session_end(cast(SessionEndPayload, payload), agent)
 
             raise HTTPException(status.HTTP_400_BAD_REQUEST, "Unsupported event type")
         finally:

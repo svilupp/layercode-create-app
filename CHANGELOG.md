@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2025-12-31
+
+### Added
+
+- New `slow_agent`: Testing agent that responds in 3 parts over ~10 seconds, ideal for testing wait/timeout handling in layercode-gym
+
 ## [0.1.1] - 2025-12-02
 
 ### Fixed

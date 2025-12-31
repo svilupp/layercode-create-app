@@ -9,7 +9,7 @@
 `layercode-create-app` is a lightweight toolkit for spinning up LayerCode-compatible FastAPI backends with a single command. It packages:
 
 - **Typed LayerCode SDK primitives** for webhook payloads, signature verification, and SSE streaming
-- **Ready-to-run agents** (echo, starter, bakery) powered by [PydanticAI](https://ai.pydantic.dev/)
+- **Ready-to-run agents** (echo, starter, bakery, outdoor_shop, slow_agent) powered by [PydanticAI](https://ai.pydantic.dev/)
 - **Observability hooks** for Logfire + Loguru
 - **Built-in Cloudflare tunneling** for instant public webhook URLs
 - **An ergonomic CLI** for zero-config development
@@ -113,7 +113,7 @@ uvx layercode-create-app run --agent bakery --tunnel
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `--agent` | `starter` | Which built-in agent to run (`echo`, `starter`, `bakery`) |
+| `--agent` | `starter` | Which built-in agent to run (`echo`, `starter`, `bakery`, `outdoor_shop`, `slow_agent`) |
 | `--model` | env `DEFAULT_MODEL` | Model identifier passed to PydanticAI |
 | `--host` | `0.0.0.0` | Server host binding |
 | `--port` | `8000` | Server port |
@@ -132,6 +132,8 @@ uvx layercode-create-app run --agent bakery --tunnel
 - **echo** – Deterministic welcome + echo responses (no LLMs required)
 - **starter** – Concise general-purpose assistant with progressive disclosure and automatic transcription cleanup
 - **bakery** – Bakery persona demonstrating simple tool calls for menu lookup, order placement, and reservations
+- **outdoor_shop** – Customer service agent for "Nimbus Gear" outdoor equipment store with complex tool responses and structured data payloads
+- **slow_agent** – Testing agent that responds in 3 parts over ~10 seconds; ideal for testing wait/timeout handling in layercode-gym
 
 All prompts live under `src/layercode_create_app/agents/prompts/`. Edit them or add new agents by following the `BaseLayercodeAgent` interface.
 
@@ -203,7 +205,9 @@ layercode-create-app/
 │       │   ├── base.py
 │       │   ├── echo.py
 │       │   ├── starter.py
-│       │   └── bakery.py
+│       │   ├── bakery.py
+│       │   ├── outdoor_shop.py
+│       │   └── slow_agent.py
 │       ├── sdk/             # LayerCode SDK primitives
 │       ├── server/          # FastAPI app and routing
 │       ├── cli.py           # CLI entry point
