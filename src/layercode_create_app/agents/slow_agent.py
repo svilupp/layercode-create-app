@@ -43,7 +43,7 @@ class SlowAgent(BaseLayercodeAgent):
     ) -> None:
         stream.tts(
             "Welcome! I'm a slow agent. "
-            "Every response takes about 10 seconds with updates along the way."
+            "Every response takes a bit longer than usual with updates along the way."
         )
         stream.end()
 

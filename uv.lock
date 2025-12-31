@@ -1402,7 +1402,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.8" },
     { name = "textprompts", specifier = ">=1.1.0" },
-    { name = "ty", marker = "extra == 'dev'", specifier = ">=0.0.1a14" },
+    { name = "ty", marker = "extra == 'dev'", specifier = ">=0.0.8" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.31.1" },
 ]
 provides-extras = ["dev"]
@@ -1413,7 +1413,7 @@ dev = [
     { name = "pytest-asyncio", specifier = ">=1.2.0" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
     { name = "ruff", specifier = ">=0.14.3" },
-    { name = "ty", specifier = ">=0.0.1a14" },
+    { name = "ty", specifier = ">=0.0.8" },
 ]
 docs = [
     { name = "mkdocs", specifier = ">=1.6.0" },
